@@ -4,6 +4,8 @@ import com.thesiri.spring.blog.api.payload.PostDto;
 import com.thesiri.spring.blog.api.payload.PostResponse;
 import com.thesiri.spring.blog.api.service.PostService;
 import com.thesiri.spring.blog.api.utils.AppConstants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
+@Api(value = "Post resource to perform CRUD operation")
 @RequestMapping("/api/posts")
 @RestController
 public class PostController {
 
     @Autowired
     private PostService postService;
-
+    @ApiOperation(value = "Create Post REST API")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         PostDto data = postService.createPost(postDto);
@@ -30,7 +32,7 @@ public class PostController {
 //        List<PostDto> data = postService.getAllPosts();
 //        return new ResponseEntity<>(data, HttpStatus.OK);
 //    }
-
+    @ApiOperation(value = "Get All Posts REST API")
     @GetMapping
     public ResponseEntity<PostResponse> getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
@@ -41,7 +43,7 @@ public class PostController {
         PostResponse postResponse =  postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "Get Post by Id REST API")
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostId(@PathVariable("id") Long id) {
         PostDto data = postService.getPostById(id);
@@ -49,13 +51,13 @@ public class PostController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "Update Posts REST API")
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable("id") Long id) {
         PostDto postResponse = postService.updatePost(postDto, id);
         return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
-
+    @ApiOperation(value = "Delete Posts REST API")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") Long id) {
         postService.deletePostById(id);
