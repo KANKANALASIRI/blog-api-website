@@ -2,12 +2,15 @@ package com.thesiri.spring.blog.api.service.impl;
 
 import com.thesiri.spring.blog.api.entity.Comment;
 import com.thesiri.spring.blog.api.entity.Post;
+import com.thesiri.spring.blog.api.exception.BlogAPIException;
+import com.thesiri.spring.blog.api.exception.ResourceNotFoundException;
 import com.thesiri.spring.blog.api.payload.CommentDto;
 import com.thesiri.spring.blog.api.repository.CommentRepository;
 import com.thesiri.spring.blog.api.repository.PostRepository;
 import com.thesiri.spring.blog.api.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +37,9 @@ public class CommentServiceImpl  implements CommentService {
         // retrieve post by id
         Post post = postRepository
                 .findById(postId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
+
 
         // set post to comment entity
         comment.setPost(post);
@@ -58,14 +63,19 @@ public class CommentServiceImpl  implements CommentService {
     public CommentDto getCommentById(Long postId, Long commentId) {
         // retrieve post entity by id
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
         // retrieve comment by id
         Comment comment = commentRepository
                 .findById(commentId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
 
         if (!comment.getPost().getId().equals(post.getId())) {
-            throw new RuntimeException("comment does not belong to post");
+
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+//            throw new RuntimeException("comment does not belong to post");
         }
         return mapToDTO(comment);
     }
@@ -74,14 +84,18 @@ public class CommentServiceImpl  implements CommentService {
     public CommentDto updateComment(Long postId, Long commentId, CommentDto commentUpdate) {
         // retrieve post entity by id
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
         // retrieve comment by id
         Comment comment = commentRepository
                 .findById(commentId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
 
         if (!comment.getPost().getId().equals(post.getId())) {
-            throw new RuntimeException("comment does not belong to post");
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+//            throw new RuntimeException("comment does not belong to post");
         }
 
         comment.setName(commentUpdate.getName());
@@ -97,14 +111,17 @@ public class CommentServiceImpl  implements CommentService {
 
         // retrieve post entity by id
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
         // retrieve comment by id
         Comment comment = commentRepository
                 .findById(commentId)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", postId));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
 
         if (!comment.getPost().getId().equals(post.getId())) {
-            throw new RuntimeException("comment does not belong to post");
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
+//            throw new RuntimeException("comment does not belong to post");
         }
 
         commentRepository.delete(comment);

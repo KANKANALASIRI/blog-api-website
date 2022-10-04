@@ -1,6 +1,7 @@
 package com.thesiri.spring.blog.api.service.impl;
 
 import com.thesiri.spring.blog.api.entity.Post;
+import com.thesiri.spring.blog.api.exception.ResourceNotFoundException;
 import com.thesiri.spring.blog.api.payload.PostDto;
 import com.thesiri.spring.blog.api.payload.PostResponse;
 import com.thesiri.spring.blog.api.repository.PostRepository;
@@ -73,7 +74,9 @@ public class PostServiceImpl implements PostService {
     public PostDto getPostById(Long id) {
         Post post = postRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
 
         return mapToDTO(post);
     }
@@ -83,7 +86,8 @@ public class PostServiceImpl implements PostService {
         // get post by id from database
         Post post = postRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
         // get update data
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
@@ -99,7 +103,8 @@ public class PostServiceImpl implements PostService {
         // get post by id from database
         Post post = postRepository
                 .findById(id)
-                .orElseThrow(() -> new RuntimeException("resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
+//                .orElseThrow(() -> new RuntimeException("resource not found"));
         // delete the post
         postRepository.delete(post);
     }
